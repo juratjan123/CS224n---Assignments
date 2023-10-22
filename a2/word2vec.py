@@ -18,7 +18,7 @@ def sigmoid(x):
     """
 
     ### YOUR CODE HERE (~1 Line)
-
+    s = 1/(1+np.exp(-x))
     ### END YOUR CODE
 
     return s
@@ -63,7 +63,32 @@ def naiveSoftmaxLossAndGradient(
 
     ### Please use the provided softmax function (imported earlier in this file)
     ### This numerically stable implementation helps you avoid issues pertaining
-    ### to integer overflow. 
+    ### to integer overflow.
+
+    gradOutsideVecs = np.zeros_like(outsideVectors)
+    # 通过取向量点积并应用softmax获得y_hat（即条件概率分布p(O = o | C = c))
+    y_hat = softmax(np.dot(outsideVectors, centerWordVec))  # (N,) N x 1
+    # 也可以一行代码获取y_hat: y_hat = softmax(outsideVectors @ centerWordVec)
+
+    # 对于一对词c和o，损失由以下公式给出：
+    # J(v_c, o, U) = -log P(O = o | C = c) = -log [y_hat[o]]
+    loss = -np.log(y_hat[outsideWordIdx])
+
+    # 计算梯度
+    # 生成实际标签的one-hot向量，[..., 0, outsideWordIdx=1, 0, ...]
+    y = np.zeros_like(y_hat)
+    y[outsideWordIdx] = 1
+    # 也可以将损失表示为 -np.dot(y, np.log(y_hat))
+
+    gradCenterVec = np.dot(y_hat - y, outsideVectors)  # 内积结果是一个标量
+    # 或 gradCenterVec = np.dot(outsideVectors.T, y_hat - y)
+
+    gradOutsideVecs = np.outer(y_hat - y, centerWordVec)  # 外积结果是一个矩阵
+    # 或 gradOutsideVecs = np.dot((y_hat - y)[:, np.newaxis], centerWordVec[np.newaxis, :])
+
+    # 检查维度是否正确
+    assert gradCenterVec.shape == centerWordVec.shape
+    assert gradOutsideVecs.shape == outsideVectors.shape
 
     ### END YOUR CODE
 
@@ -112,6 +137,23 @@ def negSamplingLossAndGradient(
 
     ### Please use your implementation of sigmoid in here.
 
+    gradOutsideVecs = np.zeros(outsideVectors.shape)
+
+    # 计算第一项
+    y_hat = sigmoid(np.dot(outsideVectors[outsideWordIdx], centerWordVec))
+    loss = -np.log(y_hat)
+
+    gradCenterVec = np.dot(y_hat - 1, outsideVectors[outsideWordIdx])
+    gradOutsideVecs[outsideWordIdx] = np.dot(y_hat - 1, centerWordVec)
+
+    # 计算第二项
+    for i in range(K):
+        w_k = indices[i + 1]
+        y_k_hat = sigmoid(-np.dot(outsideVectors[w_k], centerWordVec))
+        loss += -np.log(y_k_hat)
+        gradOutsideVecs[w_k] += np.dot(1.0 - y_k_hat, centerWordVec)
+        gradCenterVec += np.dot(1.0 - y_k_hat, outsideVectors[w_k])
+
     ### END YOUR CODE
 
     return loss, gradCenterVec, gradOutsideVecs
@@ -157,6 +199,24 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
     gradOutsideVectors = np.zeros(outsideVectors.shape)
 
     ### YOUR CODE HERE (~8 Lines)
+
+    # 首先从currentCenterWord中获取中心词向量
+    centerWordIdx = word2Ind[currentCenterWord]
+    centerWordVec = centerWordVectors[centerWordIdx]
+
+    for outsideWord in outsideWords:
+        outsideWordIdx = word2Ind[outsideWord]
+
+        # 获取单步损失（stepLoss）、中心词梯度（gradCenter）和外部词梯度（gradOutside）
+        stepLoss, gradCenter, gradOutside = word2vecLossAndGradient(centerWordVec,
+                                                                    outsideWordIdx,
+                                                                    outsideVectors,
+                                                                    dataset)
+
+        # 累积损失和梯度
+        loss += stepLoss
+        gradCenterVecs[centerWordIdx] += gradCenter
+        gradOutsideVectors += gradOutside
 
     ### END YOUR CODE
     
