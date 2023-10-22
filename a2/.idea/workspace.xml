@@ -1,42 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0f97c41-33fd-4cba-8254-fa2ba03e1ecf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/a2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_10000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_15000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_20000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_25000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_30000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_35000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_40000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_params_5000.npy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_10000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_15000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_20000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_25000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_30000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_35000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_40000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/saved_state_5000.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/README.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/SOStr.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/STree.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/datasetSentences.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/datasetSplit.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/dictionary.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/original_rt_snippets.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/datasets/stanfordSentimentTreebank/sentiment_labels.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/word_vectors.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/sgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/word2vec.py" beforeDir="false" afterPath="$PROJECT_DIR$/word2vec.py" afterDir="false" />
-    </list>
+    <list default="true" id="e0f97c41-33fd-4cba-8254-fa2ba03e1ecf" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,19 +18,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "settings.editor.selected.configurable": "configurable.group.language",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -75,6 +40,7 @@
       <option name="presentableId" value="Default" />
       <updated>1697960039769</updated>
       <workItem from="1697960041243" duration="3061000" />
+      <workItem from="1697992036023" duration="222000" />
     </task>
     <servers />
   </component>
