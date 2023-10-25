@@ -73,10 +73,26 @@ class ParserModel(nn.Module):
         ### 
         ### See the PDF for hints.
 
+        self.embed_to_hidden_weight = nn.Parameter(
+            nn.init.xavier_uniform_(torch.empty(self.n_features * self.embed_size, self.hidden_size)))
+        # 创建一个权重参数，将输入特征和嵌入维度的乘积作为行数，隐藏单元数量作为列数，
+        # 并使用 Xavier 初始化方法进行权重初始化。
 
+        self.embed_to_hidden_bias = nn.Parameter(nn.init.uniform_(torch.empty(self.hidden_size)))
+        # 创建一个偏置参数，其长度等于隐藏单元的数量，并使用均匀分布初始化。
 
+        self.dropout = nn.Dropout(p=self.dropout_prob)
+        # 创建一个丢弃层，用于随机丢弃输入的一部分数据，以防止过拟合。
 
-        ### END YOUR CODE
+        self.hidden_to_logits_weight = nn.Parameter(
+            nn.init.xavier_uniform_(torch.empty(self.hidden_size, self.n_classes)))
+        # 创建一个权重参数，将隐藏单元数量作为行数，输出类别数量作为列数，
+        # 并使用 Xavier 初始化方法进行权重初始化。
+
+        self.hidden_to_logits_bias = nn.Parameter(nn.init.uniform_(torch.empty(self.n_classes)))
+        # 创建一个偏置参数，其长度等于输出类别的数量，并使用均匀分布初始化。
+
+    ### END YOUR CODE
 
     def embedding_lookup(self, w):
         """ Utilize `w` to select embeddings from embedding matrix `self.embeddings`
@@ -107,7 +123,14 @@ class ParserModel(nn.Module):
         ###     View: https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
         ###     Flatten: https://pytorch.org/docs/stable/generated/torch.flatten.html
 
+        x = torch.Tensor(
+            [torch.index_select(self.embeddings, 0, w[b]).view(-1).detach().numpy() for b in range(w.shape[0])])
+        # 对于输入张量 `w` 中的每个样本（batch 中的每个示例），通过索引选择相应的嵌入向量，
+        # 并使用 `view` 函数对其进行重塑，以确保张量的形状正确。
+        # 最后，将结果转换为 PyTorch 张量。
 
+        assert x.shape == (w.shape[0], self.n_features * self.embed_size)
+        # 断言确保 x 的形状与预期形状匹配，以验证操作的正确性。
 
         ### END YOUR CODE
         return x
@@ -143,7 +166,18 @@ class ParserModel(nn.Module):
         ### Please see the following docs for support:
         ###     Matrix product: https://pytorch.org/docs/stable/torch.html#torch.matmul
         ###     ReLU: https://pytorch.org/docs/stable/nn.html?highlight=relu#torch.nn.functional.relu
+        embeddings = self.embedding_lookup(w)
+        # 使用自定义的embedding_lookup方法来获取单词的嵌入向量。
 
+        hidden_activations = torch.nn.functional.relu(
+            embeddings @ self.embed_to_hidden_weight + self.embed_to_hidden_bias)
+        # 计算隐藏层的激活，通过将嵌入向量与权重相乘并加上偏置，然后应用ReLU激活函数。
+
+        hidden_activations_droppedout = self.dropout(hidden_activations)
+        # 应用在初始化时定义的丢弃层，以防止过拟合。
+
+        logits = hidden_activations_droppedout @ self.hidden_to_logits_weight + self.hidden_to_logits_bias
+        # 计算模型的预测（logits）通过将隐藏激活与权重相乘并加上偏置。
 
         ### END YOUR CODE
         return logits

@@ -53,6 +53,12 @@ def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=1
     ###     Adam Optimizer: https://pytorch.org/docs/stable/optim.html
     ###     Cross Entropy Loss: https://pytorch.org/docs/stable/nn.html#crossentropyloss
 
+    # 使用Adam优化器，将神经依存解析器模型的参数传递给优化器
+    optimizer = optim.Adam(parser.model.parameters(), lr=lr)
+
+    # 使用交叉熵损失函数，该损失函数通常用于训练分类模型
+    # `reduction`参数设置为'mean'表示损失将计算每个示例的均值
+    loss_func = nn.CrossEntropyLoss(reduction='mean')
 
 
     ### END YOUR CODE
@@ -106,8 +112,17 @@ def train_for_epoch(parser, train_data, dev_data, optimizer, loss_func, batch_si
             ### Please see the following docs for support:
             ###     Optimizer Step: https://pytorch.org/docs/stable/optim.html#optimizer-step
 
+            # 前向传播：计算预测的logits
+            logits = parser.model(train_x)
 
+            # 计算损失
+            loss = loss_func(logits, train_y)
 
+            # 计算损失相对于模型参数的梯度。
+            loss.backward()
+
+            # 使用优化器进行一步优化
+            optimizer.step()
 
             ### END YOUR CODE
             prog.update(1)

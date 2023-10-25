@@ -33,6 +33,9 @@ class PartialParse(object):
         ### Note: If you need to use the sentence object to initialize anything, make sure to not directly 
         ###       reference the sentence object.  That is, remember to NOT modify the sentence object. 
 
+        self.stack = ['ROOT']  # 初始化堆栈并将其顶部设置为ROOT
+        self.buffer = sentence[:]  # 初始化缓冲区并将其初始化为句子的拷贝
+        self.dependencies = []  # 初始化依赖关系列表
 
         ### END YOUR CODE
 
@@ -52,6 +55,27 @@ class PartialParse(object):
         ###         2. Left Arc
         ###         3. Right Arc
 
+        if transition == 'S':
+            # 如果转换是Shift（将单词移到堆栈）
+            # 1. 从buffer中弹出头部单词
+            buffer_head = self.buffer.pop(0)
+            # 2. 将该单词添加到堆栈
+            self.stack.append(buffer_head)
+        elif transition == 'LA':
+            # 如果转换是Left Arc（左弧）
+            # 1. 从堆栈中弹出倒数第二个单词，作为依赖项
+            dependent = self.stack.pop(-2)
+            # 2. 将依赖项和堆栈顶部单词之间建立依赖关系，并将其添加到依赖关系列表中
+            self.dependencies.append((self.stack[-1], dependent))
+        elif transition == 'RA':
+            # 如果转换是Right Arc（右弧）
+            # 1. 从堆栈中弹出顶部单词，作为依赖项
+            dependent = self.stack.pop()
+            # 2. 将依赖项和堆栈顶部单词之间建立依赖关系，并将其添加到依赖关系列表中
+            self.dependencies.append((self.stack[-1], dependent))
+        else:
+            # 如果转换不是"S"、"LA"或"RA"，则输出未知的转换类型
+            print(f"Unknown Transition: {transition}")
 
         ### END YOUR CODE
 
@@ -103,6 +127,29 @@ def minibatch_parse(sentences, model, batch_size):
     ###             to remove objects from the `unfinished_parses` list. This will free the underlying memory that
     ###             is being accessed by `partial_parses` and may cause your code to crash.
 
+    # 初始化一个PartialParse列表，每个句子一个
+    partial_parses = [PartialParse(sentence) for sentence in sentences]
+
+    # 浅拷贝partial_parses。
+    unfinished_parses = partial_parses[:]
+
+    # 当unfinished_parses不为空时执行
+    while unfinished_parses:
+        # 将unfinished_parses中的前batch_size个解析作为小批量
+        minibatch = unfinished_parses[:batch_size]
+
+        # 使用模型预测小批量中每个PartialParse的下一个转换
+        transitions = model.predict(minibatch)
+
+        # 对于每个PartialParse_minibatch和它们预测的转换执行解析步骤
+        for transition, partial_parse in zip(transitions, minibatch):
+            partial_parse.parse_step(transition)
+
+            # 删除已完成的解析
+            if len(partial_parse.buffer) == 0 and len(partial_parse.stack) == 1:
+                unfinished_parses.remove(partial_parse)
+
+    dependencies = [parse.dependencies for parse in partial_parses]
 
     ### END YOUR CODE
 
@@ -171,7 +218,7 @@ class DummyModel(object):
         """First shifts everything onto the stack and then does exclusively right arcs if the first word of
         the sentence is "right", "left" if otherwise.
         """
-        return [("RA" if pp.stack[1] is "right" else "LA") if len(pp.buffer) == 0 else "S"
+        return [("RA" if pp.stack[1] == "right" else "LA") if len(pp.buffer) == 0 else "S"
                 for pp in partial_parses]
 
     def interleave_predict(self, partial_parses):
